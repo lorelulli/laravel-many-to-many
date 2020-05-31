@@ -27,8 +27,16 @@
                             <td>{{$page->created_at}}</td>
                             <td>{{$page->updated_at}}</td>
                             <td><a class="btn btn-primary" href="{{route('admin.pages.show',$page->id)}}">Visualizza</a> </td>
-                            <td><a class="btn btn-primary" href="{{route('admin.pages.edit',$page->id)}}">Modifica</a> </td> 
-                            <td>Elimina</td>
+                            <td><a class="btn btn-primary" href="{{route('admin.pages.edit',$page->id)}}">Modifica</a> </td>
+                            @if (Auth::id() == $page->user_id)
+                                <td><form  action="{{route('admin.pages.destroy',$page->id)}}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <input type="submit"  value="Cancella">
+
+                                </form> </td>
+
+                            @endif
 
                         @endforeach
 

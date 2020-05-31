@@ -120,6 +120,28 @@ class PageController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $data = $request->all();
+        $data['slug'] = Str::slug($data['title'], '-');
+        $user_id = Auth::id();
+        $page = Page::findOrFail($id);
+        $author = $page->user->id;
+
+        if ($user_id != $author) {
+            abort('404');
+        }
+
+        $page->fill($data);
+        $updated = $page->update();
+
+        if (!$updated) {
+            return redirect()->back();
+        }
+
+        $page->tags()->sync($data['tags']);
+        $page->photos()->sync($data['photos']);
+
+        return redirect()->route('admin.pages.show',$page->id);
+
 
     }
 
@@ -131,6 +153,14 @@ class PageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $page = Page::findOrFail($id);
+        $page->tags()->detach();
+        $page->photos()->detach();
+        $deleted = $page->delete();
+
+        if (!$deleted) {
+            return redirect()->back();
+        }
+        return redirect()->route('admin.pages.index');
     }
 }

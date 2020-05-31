@@ -41,7 +41,7 @@
                         <h3>Tags</h3>
                         @foreach ($tags as $key => $tag)
                             <label for="tags-{{$tag->id}}">{{$tag->name}}</label>
-                            <input type="checkbox" name="tags[]" value="{{$tag->id}}"{{(!empty(old('tags.' . $key))) ? "checked" : ''}} id="tags-{{$tag->id}}" >
+                            <input type="checkbox" name="tags[]" value="{{$tag->id}}"{{(!empty(old('tags.' . $key))) || $page->tags->contains($tag->id) ? "checked" : ''}} id="tags-{{$tag->id}}" >
 
                         @endforeach
 
@@ -50,12 +50,12 @@
                         <h3>Photos</h3>
                         @foreach ($photos as $key => $photo)
                             <label for="photos-{{$photo->id}}">{{$photo->name}}</label>
-                            <input type="checkbox" name="photos[]" value="{{$photo->id}}"{{(!empty(old('photos.' . $key))) ? "checked" : ''}} id="photos-{{$photo->id}}" >
+                            <input type="checkbox" name="photos[]" value="{{$photo->id}}"{{(!empty(old('photos.' . $key))) || $page->photos->contains($photo->id) ? "checked" : ''}} id="photos-{{$photo->id}}" >
 
                         @endforeach
 
                     </div>
-                    <input type="submit" class="btn btn-primary" value="salva">
+                    <input type="submit" class="btn btn-primary" value="Salva">
 
                 </form>
 
