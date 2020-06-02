@@ -7,7 +7,7 @@
                     {{$message}}
 
                 @endforeach
-                <form  action="{{route('admin.pages.store')}}" method="post">
+                <form  action="{{route('admin.pages.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('POST')
                     <div class="form-group">
@@ -48,11 +48,13 @@
                     </div>
                     <div class="photos">
                         <h3>Photos</h3>
-                        @foreach ($photos as $key => $photo)
+                        {{-- @foreach ($photos as $key => $photo)
                             <label for="photos-{{$photo->id}}">{{$photo->name}}</label>
                             <input type="checkbox" name="photos[]" value="{{$photo->id}}"{{(!empty(old('photos.' . $key))) ? "checked" : ''}} id="photos-{{$photo->id}}" >
 
-                        @endforeach
+                        @endforeach  --}}
+                        <label for="photo"></label>
+                        <input type="file" name="photo" id="photo">
 
                     </div>
                     <input type="submit" class="btn btn-primary" value="salva">

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use App\User;
 use App\InfoUser;
 use App\Category;
@@ -54,9 +55,9 @@ class PageController extends Controller
            'body' => 'required',
            'category_id' => 'required|exists:categories,id',
            'tags' => 'required|array',
-           'photos' => 'required|array',
-           'tags.*.' =>'exists:tags,id',
-           'photos.*.' =>'exists:photos,id'
+           // 'photos' => 'required|array',
+           'tags.*.' =>'exists:tags,id'
+           // 'photos.*.' =>'exists:photos,id'
        ]);
 
        if ($validator->fails()) {
@@ -66,6 +67,16 @@ class PageController extends Controller
        }
        $page = new Page;
        $data = $request->all();
+       if (isset($data['photo'])) {
+           $path = Storage::disk('public')->put('images', $data['photo']);
+
+           $photo = new Photo;
+           $photo->name = $data['title'];
+           $photo->path = $path;
+           $photo->user_id = Auth::id();
+           $photo->description = 'description';
+           $photo->save();
+       }
        $data['slug'] = Str::slug($data['title'], '-');
        $data['user_id'] = Auth::id();
 
@@ -77,7 +88,10 @@ class PageController extends Controller
        }
 
        $page->tags()->attach($data['tags']);
-       $page->photos()->attach($data['photos']);
+       // $page->photos()->attach($data['photos']);
+       if(!empty($photo)){
+           $page->photos()->attach($photo);
+       }
 
        return redirect()->route('admin.pages.show',$page->id);
 

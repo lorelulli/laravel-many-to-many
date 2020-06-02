@@ -24,6 +24,14 @@
 
         @endif
 
+        @if ($page->photos->count() > 0)
+            @foreach ($page->photos as $photo)
+                <img class="img.fluid" src="{{asset('storage/' . $photo->path)}}" alt="">
+
+
+            @endforeach
+
+        @endif
     </div>
 
 </div>
